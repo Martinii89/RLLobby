@@ -1,9 +1,8 @@
-﻿using FastEndpoints;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using RLLobby.Server.Contracts.Requests;
 using RLLobby.Server.Contracts.Responses;
 using RLLobby.Server.Data;
-using RLLobby.Server.Mapping;
+using RLLobby.Server.Mappers;
 
 namespace RLLobby.Server.Endpoints;
 
@@ -11,22 +10,24 @@ namespace RLLobby.Server.Endpoints;
 [AllowAnonymous]
 public class GetLobbyEndpoint : Endpoint<GetLobbyRequest, GetLobbyResponse>
 {
-    private readonly ILobbyRepository _lobbyRepository;
+    private readonly ILobbyRepository m_lobbyRepository;
+    private readonly ILobbyMapper m_mapper;
 
-    public GetLobbyEndpoint(ILobbyRepository lobbyRepository)
+    public GetLobbyEndpoint(ILobbyRepository lobbyRepository,  ILobbyMapper mapper)
     {
-        _lobbyRepository = lobbyRepository;
+        m_lobbyRepository = lobbyRepository;
+        m_mapper = mapper;
     }
 
     public override async Task HandleAsync(GetLobbyRequest req, CancellationToken ct)
     {
-        var lobby = await _lobbyRepository.GetLobbyByIdAsync(req.Id);
+        var lobby = await m_lobbyRepository.GetLobbyByIdAsync(req.Id);
         if (lobby == null)
         {
             await SendNotFoundAsync(ct);
             return;
         }
 
-        await SendAsync(lobby.ToGetLobbyResponse(), cancellation: ct);
+        await SendAsync(m_mapper.MapToGetResponse(lobby), cancellation: ct);
     }
 }

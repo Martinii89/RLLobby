@@ -1,27 +1,39 @@
 ﻿using System.Net;
-using FastEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using RLLobby.Server.Contracts.Requests;
 using RLLobby.Server.Contracts.Responses;
 using RLLobby.Server.Data;
-using RLLobby.Server.Mapping;
+using RLLobby.Server.Mappers;
 
 namespace RLLobby.Server.Endpoints;
 
-[HttpPost("lobby")]
-[AllowAnonymous]
 public class CreateLobbyEndpoint : Endpoint<CreateLobbyRequest, CreateLobbyResponse>
 {
-    private readonly ILobbyRepository _lobbyRepository;
+    private readonly ILobbyRepository m_lobbyRepository;
+    private readonly ILobbyMapper m_mapper;
 
-    public CreateLobbyEndpoint(ILobbyRepository lobbyRepository)
+    public override void Configure()
     {
-        _lobbyRepository = lobbyRepository;
+        Post("lobby");
+        AllowAnonymous();
+        Summary(s =>
+        {
+            s.RequestParam(r => r.IpAddress, "If this parameter is missing, the server will use the ip of the request");
+        });
+    }
+
+    public CreateLobbyEndpoint(ILobbyRepository lobbyRepository, ILobbyMapper mapper)
+    {
+        m_lobbyRepository = lobbyRepository;
+        m_mapper = mapper;
     }
 
     public override async Task HandleAsync(CreateLobbyRequest req, CancellationToken ct)
     {
-        req.IpAddress ??= HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString();
+        if (string.IsNullOrEmpty(req.IpAddress))
+        {
+            req.IpAddress = HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString();
+        }
         ArgumentNullException.ThrowIfNull(req.IpAddress);
         if (!IPAddress.TryParse(req.IpAddress, out _))
         {
@@ -29,12 +41,12 @@ public class CreateLobbyEndpoint : Endpoint<CreateLobbyRequest, CreateLobbyRespo
         }
 
 
-        var lobby = await _lobbyRepository.CreateAsync(req.ToLobby());
+        var lobby = await m_lobbyRepository.CreateAsync(m_mapper.MapToLobby(req));
         if (lobby is null)
         {
             ThrowError("Failed to create lobby");
         }
 
-        await SendCreatedAtAsync<GetLobbyEndpoint>(new {id = lobby.Id}, new CreateLobbyResponse { LobbyToken = lobby.KeepAliveToken }, cancellation: ct);
+        await SendCreatedAtAsync<GetLobbyEndpoint>(new {id = lobby.Id}, m_mapper.MapToCreateResponse(lobby), cancellation: ct);
     }
 }

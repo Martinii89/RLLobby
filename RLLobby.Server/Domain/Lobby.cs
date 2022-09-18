@@ -1,11 +1,6 @@
-﻿using RLLobby.Server.Domain;
+﻿namespace RLLobby.Server.Domain;
 
-namespace RLLobby.Server.Contracts.Responses;
-
-/// <summary>
-/// Includes all the fields of <see cref="Lobby"/> except the KeepAlive token
-/// </summary>
-public class GetLobbyResponse
+public class Lobby
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; } = default!;
@@ -16,6 +11,10 @@ public class GetLobbyResponse
     public bool HasPassword { get; set; }
     public string IpAddress { get; set; } = default!;
     public int Port { get; set; }
-    public DateTime Created { get; set; }
-    public DateTime Updated { get; set; }
+    public DateTime Created { get; set; } = DateTime.Now;
+    public DateTime Updated { get; set; } = DateTime.Now;
+    public Guid Token { get; set; } = Guid.NewGuid();
+
+
+    public string Host => $"{IpAddress}:{Port}";
 }

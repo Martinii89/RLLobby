@@ -10,7 +10,9 @@
 #include <memory>
 
 #include "imgui/imgui.h"
+#include "nlohmann/json.hpp"
 
+using json = nlohmann::json;
 
 extern std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 
