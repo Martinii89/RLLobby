@@ -1,14 +1,28 @@
 ﻿#pragma once
+#include "Contracts/contract_includes.h"
 
-struct CreateLobbyRequest;
-
-class RLLobbyApi
+namespace rllobby_api
 {
-public:
-	explicit RLLobbyApi(std::string endpoint);
+	class RLLobbyApi
+	{
+	public:
+		explicit RLLobbyApi(std::string endpoint);
 
-	void CreateLobby(const CreateLobbyRequest& create_lobby_request);
+		void CreateLobby(
+			const requests::CreateLobbyRequest& create_lobby_request,
+			const std::function<void(const responses::CreateLobbyResponse&)>& success_callback,
+			const std::function<void(const std::string&)>& error_callback);
 
-private:
-	std::string m_endpoint;
-};
+		void GetAllLobbyies(
+			const std::function<void(const responses::GetAllLobbiesResponse&)>&
+			success_callback, const std::function<void(const std::string&)>& error_callback);
+
+		void KeepLobbyAlive(
+			const requests::KeepAliveRequest&,
+			const std::function<void(responses::KeepAliveResponse)>& success_callback,
+			const std::function<void(const std::string&)>& error_callback);
+
+	private:
+		std::string m_endpoint;
+	};
+}

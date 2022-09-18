@@ -4,7 +4,9 @@
 #include <vector>
 #include "nlohmann/json.hpp"
 
-struct CreateLobbyRequest
+namespace rllobby_api::requests
+{
+	struct CreateLobbyRequest
 {
 	std::string name;
 	std::string map;
@@ -18,3 +20,5 @@ struct CreateLobbyRequest
 
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(CreateLobbyRequest, name, map, description, playerCount, players, hasPassword, ipAddress, port)
+}
+

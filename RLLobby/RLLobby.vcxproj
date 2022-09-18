@@ -81,6 +81,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>MaxSpeed</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -113,7 +114,13 @@
     <ClCompile Include="RLLobbyGUI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="API\Contracts\contract_includes.h" />
     <ClInclude Include="API\Contracts\Requests\CreateLobbyRequest.h" />
+    <ClInclude Include="API\Contracts\Requests\KeepAliveRequest.h" />
+    <ClInclude Include="API\Contracts\Response\CreateLobbyResponse.h" />
+    <ClInclude Include="API\Contracts\Response\GetAllLobbiesResponse.h" />
+    <ClInclude Include="API\Contracts\Response\KeepAliveResponse.h" />
+    <ClInclude Include="API\HttpUtils.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imguivariouscontrols.h" />

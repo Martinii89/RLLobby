@@ -13,5 +13,5 @@ public class CreateLobbyResponse
     public int Port { get; set; }
     public DateTime Created { get; set; } 
     public DateTime Updated { get; set; }
-    public Guid KeepAliveToken { get; set; }
+    public Guid Token { get; set; }
 }

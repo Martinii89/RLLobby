@@ -125,6 +125,24 @@
     <ClInclude Include="API\Contracts\Requests\CreateLobbyRequest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="API\Contracts\Response\CreateLobbyResponse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="API\Contracts\Response\GetAllLobbiesResponse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="API\HttpUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="API\Contracts\Requests\KeepAliveRequest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="API\Contracts\Response\KeepAliveResponse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="API\Contracts\contract_includes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RLLobby.rc">
