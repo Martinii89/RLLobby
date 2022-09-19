@@ -58,7 +58,7 @@ public class InMemoryLobbyRepository : ILobbyRepository
             return false;
         }
 
-        lobby.Updated = DateTime.Now;
+        lobby.Updated = DateTimeOffset.UtcNow;
         m_lobbyList[lobby.Id] = lobby;
         return true;
     }
@@ -70,7 +70,7 @@ public class InMemoryLobbyRepository : ILobbyRepository
         {
             return null;
         }
-        lobby.Updated = DateTime.Now;
+        lobby.Updated = DateTimeOffset.UtcNow;
         m_lobbyList[realLobby.Id] = lobby;
         return lobby;
     }

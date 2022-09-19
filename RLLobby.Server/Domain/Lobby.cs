@@ -11,8 +11,8 @@ public class Lobby
     public bool HasPassword { get; set; }
     public string IpAddress { get; set; } = default!;
     public int Port { get; set; }
-    public DateTimeOffset Created { get; set; } = DateTime.UtcNow;
-    public DateTimeOffset Updated { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset Created { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset Updated { get; set; } = DateTimeOffset.UtcNow;
     public Guid Token { get; set; } = Guid.NewGuid();
 
 

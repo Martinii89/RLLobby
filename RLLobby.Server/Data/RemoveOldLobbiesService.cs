@@ -19,7 +19,7 @@ public class RemoveOldLobbiesService : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             var allLobies = await m_lobbyRepository.GetAllAsync();
-            var oldLobbies = allLobies.Where(x => x.Updated.AddMinutes(OldThresholdMinutes) < DateTime.Now);
+            var oldLobbies = allLobies.Where(x => x.Updated.AddMinutes(OldThresholdMinutes) < DateTimeOffset.UtcNow);
             foreach (var oldLobby in oldLobbies)
             {
                 m_logger.LogDebug("Removing lobby {} for inactivity", oldLobby.Name);
