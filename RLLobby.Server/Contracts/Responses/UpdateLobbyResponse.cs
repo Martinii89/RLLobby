@@ -11,7 +11,5 @@ public class UpdateLobbyResponse
     public bool HasPassword { get; set; }
     public string IpAddress { get; set; } = default!;
     public int Port { get; set; }
-    public DateTime Created { get; set; } 
-    public DateTime Updated { get; set; }
     public Guid Token { get; set; }
 }

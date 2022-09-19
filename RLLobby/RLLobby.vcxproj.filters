@@ -22,11 +22,17 @@
     <Filter Include="imgui\implementation">
       <UniqueIdentifier>{d46c4711-0bdc-484c-bb4c-5526d80f7f5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Api">
+      <UniqueIdentifier>{4cd64805-3e15-4251-8f35-95ccd10da0ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin">
+      <UniqueIdentifier>{1ddcd033-f269-4b5c-9498-7de240ebd9f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="upnp">
+      <UniqueIdentifier>{51c41318-fbf0-436b-9fdb-0f96e8862adb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="RLLobby.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -63,17 +69,32 @@
     <ClCompile Include="imgui\imguivariouscontrols.cpp">
       <Filter>imgui\implementation</Filter>
     </ClCompile>
-    <ClCompile Include="RLLobbyGUI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="API\RLLobbyApi.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Api</Filter>
+    </ClCompile>
+    <ClCompile Include="RLLobbyGUI.cpp">
+      <Filter>Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="RLLobby.cpp">
+      <Filter>Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="upnp\miniupnpWrapper.cpp">
+      <Filter>upnp</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiState.cpp">
+      <Filter>Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="MatchesContainer.cpp">
+      <Filter>Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="MatchListing.cpp">
+      <Filter>Plugin</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RLLobby.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -119,29 +140,50 @@
     <ClInclude Include="version.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="API\RLLobbyApi.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="API\Contracts\contract_includes.h">
+      <Filter>Api</Filter>
     </ClInclude>
     <ClInclude Include="API\Contracts\Requests\CreateLobbyRequest.h">
-      <Filter>Header Files</Filter>
+      <Filter>Api</Filter>
     </ClInclude>
     <ClInclude Include="API\Contracts\Response\CreateLobbyResponse.h">
-      <Filter>Header Files</Filter>
+      <Filter>Api</Filter>
     </ClInclude>
     <ClInclude Include="API\Contracts\Response\GetAllLobbiesResponse.h">
-      <Filter>Header Files</Filter>
+      <Filter>Api</Filter>
     </ClInclude>
     <ClInclude Include="API\HttpUtils.h">
-      <Filter>Header Files</Filter>
+      <Filter>Api</Filter>
     </ClInclude>
     <ClInclude Include="API\Contracts\Requests\KeepAliveRequest.h">
-      <Filter>Header Files</Filter>
+      <Filter>Api</Filter>
     </ClInclude>
     <ClInclude Include="API\Contracts\Response\KeepAliveResponse.h">
-      <Filter>Header Files</Filter>
+      <Filter>Api</Filter>
     </ClInclude>
-    <ClInclude Include="API\Contracts\contract_includes.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="API\RLLobbyApi.h">
+      <Filter>Api</Filter>
+    </ClInclude>
+    <ClInclude Include="RLLobby.h">
+      <Filter>Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="MatchListing.h">
+      <Filter>Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="MatchesContainer.h">
+      <Filter>Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiState.h">
+      <Filter>Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="upnp\miniupnpWrapper.h">
+      <Filter>upnp</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="API\Contracts\Response\GetLobbyResponse.h">
+      <Filter>Api</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

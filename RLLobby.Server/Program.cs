@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using Microsoft.AspNetCore.HttpOverrides;
 using FastEndpoints.Swagger;
 using RLLobby.Server.Converters;
@@ -25,7 +26,10 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
 
-app.UseFastEndpoints(c => c.Serializer.Options.Converters.Add(new GuidConverter()));
+app.UseFastEndpoints(c =>
+{
+    c.Serializer.Options.Converters.Add(new GuidConverter());
+});
 
 
 app.UseOpenApi();

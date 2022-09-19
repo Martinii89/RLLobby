@@ -14,7 +14,9 @@ public class LobbyMapper : ILobbyMapper
 
     public GetLobbyResponse MapToGetResponse(Lobby lobby)
     {
-        return lobby.Adapt<GetLobbyResponse>();
+        var mapToGetResponse = lobby.Adapt<GetLobbyResponse>();
+        mapToGetResponse.SecondsSinceUpdate = (DateTimeOffset.UtcNow - lobby.Updated).Seconds;
+        return mapToGetResponse;
     }
 
     public UpdateLobbyResponse MapToUpdateResponse(Lobby lobby)
