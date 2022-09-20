@@ -96,7 +96,8 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="GuiState.cpp" />
+    <ClCompile Include="API\HttpUtils.cpp" />
+    <ClCompile Include="GuiData.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imguivariouscontrols.cpp" />
     <ClCompile Include="imgui\imgui_additions.cpp" />
@@ -106,6 +107,7 @@
     <ClCompile Include="imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="imgui\imgui_rangeslider.cpp" />
     <ClCompile Include="imgui\imgui_searchablecombo.cpp" />
+    <ClCompile Include="IMGUI\imgui_stdlib.cpp" />
     <ClCompile Include="imgui\imgui_timeline.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="MatchesContainer.cpp" />
@@ -123,13 +125,14 @@
   <ItemGroup>
     <ClInclude Include="API\Contracts\contract_includes.h" />
     <ClInclude Include="API\Contracts\Requests\CreateLobbyRequest.h" />
+    <ClInclude Include="API\Contracts\Requests\DeleteLobbyRequest.h" />
     <ClInclude Include="API\Contracts\Requests\KeepAliveRequest.h" />
     <ClInclude Include="API\Contracts\Response\CreateLobbyResponse.h" />
     <ClInclude Include="API\Contracts\Response\GetAllLobbiesResponse.h" />
     <ClInclude Include="API\Contracts\Response\GetLobbyResponse.h" />
     <ClInclude Include="API\Contracts\Response\KeepAliveResponse.h" />
     <ClInclude Include="API\HttpUtils.h" />
-    <ClInclude Include="GuiState.h" />
+    <ClInclude Include="GuiData.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imguivariouscontrols.h" />
@@ -139,6 +142,7 @@
     <ClInclude Include="imgui\imgui_internal.h" />
     <ClInclude Include="imgui\imgui_rangeslider.h" />
     <ClInclude Include="imgui\imgui_searchablecombo.h" />
+    <ClInclude Include="IMGUI\imgui_stdlib.h" />
     <ClInclude Include="imgui\imgui_timeline.h" />
     <ClInclude Include="imgui\imstb_rectpack.h" />
     <ClInclude Include="imgui\imstb_textedit.h" />

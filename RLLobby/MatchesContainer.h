@@ -4,13 +4,13 @@
 class MatchesContainer
 {
 public:
-	//Thread-safe access methods
 	void AddMatch(MatchListing);
-	void AddMatches(std::vector<MatchListing> matches);
+	void AddMatches(const std::vector<MatchListing>& matches);
 	std::vector<MatchListing> GetMatches();
+	std::optional<MatchListing> GetMatch(const std::string& id);
 	void ClearMatches();
 
-	std::mutex matches_lock;
-	std::vector<MatchListing> _data;
 private:
+	std::mutex m_lock;
+	std::vector<MatchListing> m_data;
 };

@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "imgui/imgui.h"
+#include "IMGUI/imgui_stdlib.h"
 #include "nlohmann/json.hpp"
 
 using json = nlohmann::json;

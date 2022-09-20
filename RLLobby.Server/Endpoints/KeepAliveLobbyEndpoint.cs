@@ -24,6 +24,6 @@ public class KeepAliveLobbyEndpoint : Endpoint<LobbyKeepAliveRequest, LobbyKeepA
             ThrowError("Failed to keep lobby alive");
         }
 
-        await SendOkAsync(ct);
+        await SendOkAsync(new LobbyKeepAliveResponse{Result = true}, ct);
     }
 }

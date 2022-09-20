@@ -25,7 +25,7 @@ namespace http_utils
 		}
 		catch (std::exception& e)
 		{
-			return ParseResult<T>{e.what(), {}};
+			return ParseResult<T>{std::format("Body was: {}\n Exception: {}", body,  e.what()), {}};
 		}
 	}
 
@@ -40,7 +40,7 @@ namespace http_utils
 		{
 			if (response_code != expected_http_code)
 			{
-				error_callback(std::format("Request failed: {}", body));
+				error_callback(std::format("Request failed({}): {}", response_code, body));
 				return;
 			}
 
@@ -55,4 +55,10 @@ namespace http_utils
 			}
 		});
 	}
+
+	void HandleRequest(
+		int expected_http_code,
+		const CurlRequest& req,
+		const std::function<void()>& success_callback,
+		const std::function<void(const std::string&)>& error_callback);
 }

@@ -1,0 +1,3 @@
+you will need the following vcpkg package installed to automagically build and link with miniupnp
+
+.\vcpkg install miniupnpc:x64-windows-static

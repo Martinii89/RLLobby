@@ -81,7 +81,7 @@
     <ClCompile Include="upnp\miniupnpWrapper.cpp">
       <Filter>upnp</Filter>
     </ClCompile>
-    <ClCompile Include="GuiState.cpp">
+    <ClCompile Include="GuiData.cpp">
       <Filter>Plugin</Filter>
     </ClCompile>
     <ClCompile Include="MatchesContainer.cpp">
@@ -92,6 +92,12 @@
     </ClCompile>
     <ClCompile Include="MatchListing.cpp">
       <Filter>Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI\imgui_stdlib.cpp">
+      <Filter>imgui\implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="API\HttpUtils.cpp">
+      <Filter>Api</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,7 +179,7 @@
     <ClInclude Include="MatchesContainer.h">
       <Filter>Plugin</Filter>
     </ClInclude>
-    <ClInclude Include="GuiState.h">
+    <ClInclude Include="GuiData.h">
       <Filter>Plugin</Filter>
     </ClInclude>
     <ClInclude Include="upnp\miniupnpWrapper.h">
@@ -183,6 +189,12 @@
       <Filter>Plugin</Filter>
     </ClInclude>
     <ClInclude Include="API\Contracts\Response\GetLobbyResponse.h">
+      <Filter>Api</Filter>
+    </ClInclude>
+    <ClInclude Include="IMGUI\imgui_stdlib.h">
+      <Filter>imgui\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="API\Contracts\Requests\DeleteLobbyRequest.h">
       <Filter>Api</Filter>
     </ClInclude>
   </ItemGroup>

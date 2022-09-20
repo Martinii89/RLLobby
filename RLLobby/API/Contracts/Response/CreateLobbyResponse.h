@@ -16,10 +16,8 @@ namespace rllobby_api::responses
 		bool hasPassword;
 		std::string ipAddress;
 		int64_t port;
-		std::string created;
-		std::string updated;
 		std::string token;
 	};
 
-	NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(CreateLobbyResponse, id, name, map, description, playerCount, players, hasPassword, ipAddress, port, created, updated, token)
+	NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(CreateLobbyResponse, id, name, map, description, playerCount, players, hasPassword, ipAddress, port, token)
 }

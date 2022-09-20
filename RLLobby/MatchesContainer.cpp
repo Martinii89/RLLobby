@@ -1,33 +1,45 @@
 ﻿#include "pch.h"
 #include "MatchesContainer.h"
 
-void MatchesContainer::AddMatch(MatchListing m)
+void MatchesContainer::AddMatch(const MatchListing m)
 {
-	std::lock_guard<std::mutex> guard(matches_lock);
-	_data.push_back(m);
+	std::lock_guard guard(m_lock);
+	m_data.push_back(m);
 }
 
-void MatchesContainer::AddMatches(std::vector<MatchListing> matches)
+void MatchesContainer::AddMatches(const std::vector<MatchListing>& matches)
 {
-	std::lock_guard<std::mutex> guard(matches_lock);
-	_data = matches;
+	std::lock_guard guard(m_lock);
+	m_data = matches;
 }
 
 
-// This is probably stupid and inefficient...
 std::vector<MatchListing> MatchesContainer::GetMatches()
 {
-	std::lock_guard<std::mutex> guard(matches_lock);
+	std::lock_guard guard(m_lock);
 	auto copy = std::vector<MatchListing>();
-	for (auto i : _data)
+	for (const auto& lobby : m_data)
 	{
-		copy.push_back(i);
+		copy.push_back(lobby);
 	}
 	return copy;
 }
 
+std::optional<MatchListing> MatchesContainer::GetMatch(const std::string& id)
+{
+	std::lock_guard guard(m_lock);
+	for (auto& lobby : m_data)
+	{
+		if (lobby.id == id)
+		{
+			return lobby;
+		}
+	}
+	return {};
+}
+
 void MatchesContainer::ClearMatches()
 {
-	std::lock_guard<std::mutex> guard(matches_lock);
-	_data.clear();
+	std::lock_guard guard(m_lock);
+	m_data.clear();
 }

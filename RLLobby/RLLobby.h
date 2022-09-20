@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GuiState.h"
+#include "GuiData.h"
 #include "MatchesContainer.h"
 #include "bakkesmod/plugin/bakkesmodplugin.h"
 #include "bakkesmod/plugin/pluginwindow.h"
@@ -23,21 +23,24 @@ class RLLobby : public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plu
 	std::shared_ptr<Miniupnpwrapper> m_upnp;
 	std::shared_ptr<rllobby_api::RLLobbyApi> m_lobby_api;
 	MatchesContainer m_matches;
-	GuiState m_guistate;
+	GuiData m_gui_data;
 	int m_keep_alive_interval = 15;
+	std::string m_last_status_message;
+
+	void SetStatus(const std::string& message);
 
 	// Plugin functions
-	int GetPlayerCount();
-	std::string GetLobbyParams();
-	std::string GetMap();
+	int GetPlayerCount() const;
+	std::string GetLobbyParams() const;
+	std::string GetMap() const;
 
 	//upnp
-	void PortForward(std::string duration);
-	void PortForwardRemove();
+	void PortForward(int duration_seconds) const;
+	void PortForwardRemove() const;
 
 	// rllobby api
 	void ApiGetMatches(bool set_status = false);
-	void ApiAddMatch(std::vector<std::string> params);
+	void ApiAddMatch(std::string name, std::string host, int port, bool has_password);
 	void ApiMatchKeepAlive();
 	void APiMatchDelete();
 
@@ -64,7 +67,7 @@ class RLLobby : public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plu
 
 	void DrawHostTab();
 	void DrawJoinTab();
-	void SetMatchColumnWidths();
+	static void SetMatchColumnWidths();
 
 	void Render() override;
 	std::string GetMenuName() override;

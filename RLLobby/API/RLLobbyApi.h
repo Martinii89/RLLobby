@@ -22,6 +22,11 @@ namespace rllobby_api
 			const std::function<void(responses::KeepAliveResponse)>& success_callback,
 			const std::function<void(const std::string&)>& error_callback);
 
+		void DeleteLobby(
+			const requests::DeleteLobbyRequest& delete_lobby_request,
+			const std::function<void()>& success_callback,
+			const std::function<void(const std::string&)>& error_callback);
+
 	private:
 		std::string m_endpoint;
 	};

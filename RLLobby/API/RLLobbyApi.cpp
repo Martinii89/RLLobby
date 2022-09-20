@@ -44,8 +44,21 @@ void rllobby_api::RLLobbyApi::KeepLobbyAlive(
 {
 	CurlRequest req;
 	req.verb = "POST";
-	req.url = std::format("{}/lobby/{}", m_endpoint, params.id);
+	req.url = std::format("{}/lobby/{}/alive", m_endpoint, params.id);
 	req.headers["Token"] = params.token;
+	req.body = "{}"; //too lazy to handle no body special case
 
 	http_utils::HandleRequest<responses::KeepAliveResponse>(200, req, success_callback, error_callback);
+}
+
+void rllobby_api::RLLobbyApi::DeleteLobby(const requests::DeleteLobbyRequest& params, const std::function<void()>& success_callback,
+	const std::function<void(const std::string&)>& error_callback)
+{
+	CurlRequest req;
+	req.verb = "DELETE";
+	req.url = std::format("{}/lobby/{}", m_endpoint, params.id);
+	req.headers["Token"] = params.token;
+	req.body = "{}"; //too lazy to handle no body special case
+
+	http_utils::HandleRequest(204, req, success_callback, error_callback);
 }

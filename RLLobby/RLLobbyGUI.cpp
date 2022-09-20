@@ -15,26 +15,8 @@ void RLLobby::Render()
 		return;
 	}
 
-	// Make style consistent with BM
-	auto& style = ImGui::GetStyle();
-	if (gameWrapper != nullptr)
-	{
-		const auto bm_style_ptr = gameWrapper->GetGUIManager().GetImGuiStyle();
-		if (bm_style_ptr != nullptr)
-		{
-			style = *(ImGuiStyle*)bm_style_ptr;
-		}
-		else
-		{
-			cvarManager->log("bm style ptr was null!!");
-		}
-	}
-	else
-	{
-		cvarManager->log("gamewrapper was null!!");
-	}
-	static ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable;
-	if (ImGui::BeginTabBar("#"), tab_bar_flags)
+
+	if (ImGui::BeginTabBar("#", ImGuiTabBarFlags_Reorderable))
 	{
 		if (ImGui::BeginTabItem("Join"))
 		{
@@ -53,13 +35,11 @@ void RLLobby::Render()
 			ImGui::Text("Check the console (F6) to know if the upnp process failed or not");
 			if (ImGui::Button("Try automatic upnp port forwarding"))
 			{
-				PortForward("18000");
+				PortForward(3600);
 			}
 			if (ImGui::Button("Remove upnp forwarding"))
 			{
 				PortForwardRemove();
-				//cvarManager->log("Removing upnp forwarding not implemented. The forwarding default to 1 hour of duration for now");
-				// TODO: Implement
 			}
 			ImGui::EndChild();
 			ImGui::EndTabItem();
@@ -68,7 +48,7 @@ void RLLobby::Render()
 	}
 
 
-	//ImGui::Text(api->GetStatus().c_str());
+	ImGui::TextUnformatted(m_last_status_message.c_str());
 
 	ImGui::End();
 
@@ -85,15 +65,18 @@ void RLLobby::DrawHostTab()
 	ImGui::Columns(1, "game", false);
 	ImGui::Text("Lobby name: ");
 	ImGui::SameLine();
-	ImGui::InputText("##lobbyNameInput", m_guistate.hostname, IM_ARRAYSIZE(m_guistate.hostname));
+	ImGui::InputText("##lobbyNameInput", &m_gui_data.hostname);
 
-	if (!m_guistate.hosting)
+	if (!m_gui_data.hosting)
 	{
 		if (ImGui::Button("Host"))
 		{
-			std::string hostname_str = std::string(m_guistate.hostname);
-			gameWrapper->Execute([this, hostname_str](GameWrapper* gw) { ApiAddMatch({"", hostname_str}); });
-			m_guistate.hosting = true;
+			auto hostname_str = m_gui_data.hostname;
+			gameWrapper->Execute([this, hostname_str](GameWrapper* gw)
+			{
+				ApiAddMatch(m_gui_data.hostname, "127.0.0.1", 7777, false);
+			});
+			m_gui_data.hosting = true;
 		}
 	}
 	else
@@ -114,10 +97,10 @@ void RLLobby::DrawJoinTab()
 
 	// Filter matches
 	ImGui::PushItemWidth(50);
-	ImGui::InputText("Name filter", m_guistate.namefilter, IM_ARRAYSIZE(m_guistate.namefilter));
+	ImGui::InputText("Name filter", &m_gui_data.namefilter);
 	ImGui::PushItemWidth(50);
 	ImGui::SameLine();
-	ImGui::InputText("map filter", m_guistate.mapfilter, IM_ARRAYSIZE(m_guistate.mapfilter));
+	ImGui::InputText("map filter", &m_gui_data.mapfilter);
 	ImGui::SameLine();
 	Utils::HelpMarker("Use * for wildcard [add a * at the end of your filter unless you want a exeact match]");
 
@@ -125,7 +108,7 @@ void RLLobby::DrawJoinTab()
 	ImGui::SameLine(ImGui::GetWindowWidth() - 60);
 	if (ImGui::Button("Refresh"))
 	{
-		m_guistate.selectedIndex = -1;
+		m_gui_data.selected_id = "";
 		ApiGetMatches(true);
 	}
 
@@ -148,63 +131,63 @@ void RLLobby::DrawJoinTab()
 	ImGui::Columns(4, 0, false);
 	SetMatchColumnWidths();
 
-	{
-		// scope for mutex. Don't remove
-		std::lock_guard<std::mutex> guard(m_matches.matches_lock);
-		bool own_listing = false;
-		for (size_t i = 0; i < m_matches._data.size(); i++)
-		{
-			auto& item = m_matches._data[i];
-			if (item.id == m_guistate.id) own_listing = true;
-			if (own_listing)
-			{
-				ImVec4 color = ImGui::GetStyleColorVec4(ImGuiCol_Text);
-				ImGui::PushStyleColor(ImGuiCol_Text, color * ImVec4(1, 0.7, 0.7, 0.66));
-			}
-			if (strlen(m_guistate.namefilter) != 0 && !Utils::StringMatch(m_guistate.namefilter, item.name.c_str())) continue;
-			if (strlen(m_guistate.mapfilter) != 0 && !Utils::StringMatch(m_guistate.mapfilter, item.map_name.c_str())) continue;
 
-			const std::string& item_name = item.name + (own_listing ? " (you)" : "") + "##" + std::to_string(i);
-			if (ImGui::Selectable(item_name.c_str(), m_guistate.selectedIndex == i, ImGuiSelectableFlags_SpanAllColumns))
-			{
-				m_guistate.selectedIndex = i;
-			};
-			ImGui::NextColumn();
-			ImGui::Text(item.map_name.c_str());
-			ImGui::NextColumn();
-			ImGui::Text(std::to_string(item.players).c_str());
-			ImGui::NextColumn();
-			ImGui::Text(std::to_string(item.time_updated).c_str());
-			ImGui::NextColumn();
-			if (own_listing)
-			{
-				ImGui::PopStyleColor();
-			}
+	bool own_listing = false;
+	for (auto& [id, name, host, port, map_name, players, time_updated] : m_matches.GetMatches())
+	{
+		if (id == m_gui_data.id) own_listing = true;
+		if (own_listing)
+		{
+			ImVec4 color = ImGui::GetStyleColorVec4(ImGuiCol_Text);
+			ImGui::PushStyleColor(ImGuiCol_Text, color * ImVec4(1, 0.7, 0.7, 0.66));
 		}
-	} // end of mutex scope
+		if (!m_gui_data.namefilter.empty() && !Utils::StringMatch(m_gui_data.namefilter.c_str(), name.c_str())) continue;
+		if (!m_gui_data.mapfilter.empty()  && !Utils::StringMatch(m_gui_data.mapfilter.c_str(), map_name.c_str())) continue;
+
+		const std::string& item_name = name + (own_listing ? " (you)" : "") + "##" + id;
+		if (ImGui::Selectable(item_name.c_str(), m_gui_data.selected_id == id, ImGuiSelectableFlags_SpanAllColumns))
+		{
+			m_gui_data.selected_id = id;
+		};
+		ImGui::NextColumn();
+		ImGui::TextUnformatted(map_name.c_str());
+		ImGui::NextColumn();
+		ImGui::TextUnformatted(std::to_string(players).c_str());
+		ImGui::NextColumn();
+		ImGui::TextUnformatted(std::to_string(time_updated).c_str());
+		ImGui::NextColumn();
+		if (own_listing)
+		{
+			ImGui::PopStyleColor();
+		}
+	}
+
 	ImGui::EndChild();
 	ImGui::Dummy(ImVec2(0, 0));
 
 	ImGui::Columns(1, 0, false);
-	bool connectButtonEnabled = m_guistate.selectedIndex != -1;
-	if (!connectButtonEnabled)
+	const auto selected_lobby = m_matches.GetMatch(m_gui_data.selected_id);
+	const bool connect_button_enabled = selected_lobby.has_value();
+	if (!connect_button_enabled)
 	{
 		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
 	}
 	ImGui::PushItemWidth(125);
-	ImGui::InputText("Password", m_guistate.password, IM_ARRAYSIZE(m_guistate.password), ImGuiInputTextFlags_Password);
+	ImGui::InputText("Password", &m_gui_data.password, ImGuiInputTextFlags_Password);
 	ImGui::SameLine();
-	if (ImGui::Button("Connect") && connectButtonEnabled /*guistate.selectedItem != nullptr*/)
+	if (ImGui::Button("Connect") && connect_button_enabled /*guistate.selectedItem != nullptr*/)
 	{
+		auto& lobby = selected_lobby.value();
 		//example host string Labs_Cosmic_V4_P?game=TAGame.GameInfo_Soccar_TA?Playtest?GameTags=BotsNone,PlayerCount8?NumPublicConnections=10?NumOpenPublicConnections=10?Lan?Listen
 		// Labs_DoubleGoal_V2_P?game=TAGame.GameInfo_Soccar_TA?Playtest?GameTags=BotsNone,PlayerCount4?NumPublicConnections=10?NumOpenPublicConnections=10?Lan?Listen
-		std::string joinStr = "open " + m_matches._data[m_guistate.selectedIndex].host + ":7777?Lan??" + "?Password=" + m_guistate.password;
+		std::string joinStr = "open " + lobby.host + ":7777?Lan??" + "?Password=" + m_gui_data.password;
+		std::string joinStr2 = std::format("open {}:{}Lan?Password={}", lobby.host, lobby.port, m_gui_data.password);
 
 		//log(joinStr);
 		gameWrapper->Execute([joinStr](GameWrapper* gw) { gw->ExecuteUnrealCommand(joinStr); });
 	}
-	if (!connectButtonEnabled)
+	if (!connect_button_enabled)
 	{
 		ImGui::PopItemFlag();
 		ImGui::PopStyleVar();
@@ -214,8 +197,8 @@ void RLLobby::DrawJoinTab()
 
 void RLLobby::SetMatchColumnWidths()
 {
-	auto width = ImGui::GetWindowWidth();
-	auto dynWidth = width - 100 - 50; //total width - two last colum widths - 50 as padding
+	const auto width = ImGui::GetWindowWidth();
+	const auto dynWidth = width - 100 - 50; //total width - two last colum widths - 50 as padding
 	ImGui::SetColumnWidth(0, dynWidth * 0.6f);
 	ImGui::SetColumnWidth(1, dynWidth * 0.4f);
 	ImGui::SetColumnWidth(2, 60);
