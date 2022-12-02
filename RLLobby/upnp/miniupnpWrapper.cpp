@@ -256,3 +256,34 @@ bool Miniupnpwrapper::RemovPortForward()
 		LOG("Did not get a devlist");
 	}
 }
+
+std::string Miniupnpwrapper::GetExternalIp()
+{
+	int nResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	if (nResult != NO_ERROR)
+	{
+		LOG("WSAStartup() failed." + std::to_string(nResult));
+		//status = WrapperStatus::InitSuccess;
+	}
+	const char* multicastif = nullptr;
+	const char* minissdpdpath = nullptr;
+	int localport = UPNP_LOCAL_PORT_ANY;
+	int error = 0;
+	int ipv6 = 0;
+	unsigned char ttl = 2; /* defaulting to 2 */
+	char lanaddr[64] = "unset"; /* my ip address on the LAN */
+
+	if (UPNPDev* devlist = upnpDiscover(2000, multicastif, minissdpdpath, localport, ipv6, ttl, &error))
+	{
+		//LOG("Found upnp devices");
+		UPNPUrls urls;
+		IGDdatas data;
+		if (UPNP_GetValidIGD(devlist, &urls, &data, lanaddr, sizeof(lanaddr)))
+		{
+			char externalIPAddress[40];
+			auto r = UPNP_GetExternalIPAddress(urls.controlURL,data.first.servicetype,externalIPAddress);
+			return externalIPAddress;
+		}
+	}
+	return "";
+}

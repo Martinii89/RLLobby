@@ -2,20 +2,25 @@
 #include "RLLobby.h"
 #include "Utils.h"
 #include "imgui/imgui_internal.h"
-#include "bakkesmod/wrappers/GuiManagerWrapper.h"
+#include "upnp/miniupnpwrapper.h"
 
-
-// Do ImGui rendering here
-void RLLobby::Render()
+static void HelpMarker(const char* desc)
 {
-	if (!ImGui::Begin(menuTitle_.c_str(), &isWindowOpen_, ImGuiWindowFlags_None))
-	{
-		// Early out if the window is collapsed, as an optimization.
-		ImGui::End();
-		return;
-	}
+    ImGui::TextDisabled("(?)");
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted(desc);
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
+}
 
 
+
+void RLLobby::RenderRLLobby()
+{
 	if (ImGui::BeginTabBar("#", ImGuiTabBarFlags_Reorderable))
 	{
 		if (ImGui::BeginTabItem("Join"))
@@ -49,6 +54,20 @@ void RLLobby::Render()
 
 
 	ImGui::TextUnformatted(m_last_status_message.c_str());
+}
+
+// Do ImGui rendering here
+void RLLobby::Render()
+{
+	if (!ImGui::Begin(menuTitle_.c_str(), &isWindowOpen_, ImGuiWindowFlags_None))
+	{
+		// Early out if the window is collapsed, as an optimization.
+		ImGui::End();
+		return;
+	}
+
+
+	RenderRLLobby();
 
 	ImGui::End();
 
@@ -62,10 +81,24 @@ void RLLobby::DrawHostTab()
 {
 	ImGui::BeginChild("#", ImVec2(-5, -25));
 
-	ImGui::Columns(1, "game", false);
-	ImGui::Text("Lobby name: ");
+	//ImGui::Columns(1, "game", false);
+	ImGui::InputText("Lobby name", &m_gui_data.hostname);
+	//ImGui::SameLine();
+	ImGui::InputText("Host-Address", &m_gui_data.host_address);
 	ImGui::SameLine();
-	ImGui::InputText("##lobbyNameInput", &m_gui_data.hostname);
+	if (ImGui::Button("Find public ip "))
+	{
+		m_gui_data.host_address = "Loading..";
+		auto t = std::thread([this](...)
+		{
+			m_gui_data.host_address = m_upnp->GetExternalIp();
+		});
+		t.detach();
+	}
+	ImGui::SameLine();
+	HelpMarker("uses UPNP");
+	//ImGui::SameLine();
+	ImGui::InputInt("Port", &m_gui_data.port);
 
 	if (!m_gui_data.hosting)
 	{
@@ -74,7 +107,7 @@ void RLLobby::DrawHostTab()
 			auto hostname_str = m_gui_data.hostname;
 			gameWrapper->Execute([this, hostname_str](GameWrapper* gw)
 			{
-				ApiAddMatch(m_gui_data.hostname, "127.0.0.1", 7777, false);
+				ApiAddMatch(m_gui_data.hostname, m_gui_data.host_address, m_gui_data.port, false);
 			});
 			m_gui_data.hosting = true;
 		}
@@ -87,8 +120,16 @@ void RLLobby::DrawHostTab()
 		}
 	}
 
+	ImGui::TextUnformatted("Note: By hosting a lobby you are exposing your ip to the world");
+
 	//ImGui::NextColumn();
 	ImGui::EndChild();
+}
+
+void RLLobby::JoinLobby(const MatchListing& lobby)
+{
+	std::string join_str = std::format("open {}:{}?Lan?Password={}", lobby.host, lobby.port, m_gui_data.password);
+	gameWrapper->Execute([join_str](GameWrapper* gw) { gw->ExecuteUnrealCommand(join_str); });
 }
 
 void RLLobby::DrawJoinTab()
@@ -181,17 +222,15 @@ void RLLobby::DrawJoinTab()
 		auto& lobby = selected_lobby.value();
 		//example host string Labs_Cosmic_V4_P?game=TAGame.GameInfo_Soccar_TA?Playtest?GameTags=BotsNone,PlayerCount8?NumPublicConnections=10?NumOpenPublicConnections=10?Lan?Listen
 		// Labs_DoubleGoal_V2_P?game=TAGame.GameInfo_Soccar_TA?Playtest?GameTags=BotsNone,PlayerCount4?NumPublicConnections=10?NumOpenPublicConnections=10?Lan?Listen
-		std::string joinStr = "open " + lobby.host + ":7777?Lan??" + "?Password=" + m_gui_data.password;
-		std::string joinStr2 = std::format("open {}:{}Lan?Password={}", lobby.host, lobby.port, m_gui_data.password);
-
-		//log(joinStr);
-		gameWrapper->Execute([joinStr](GameWrapper* gw) { gw->ExecuteUnrealCommand(joinStr); });
+		//std::string joinStr = "open " + lobby.host + ":7777?Lan??" + "?Password=" + m_gui_data.password;
+		JoinLobby(lobby);
 	}
 	if (!connect_button_enabled)
 	{
 		ImGui::PopItemFlag();
 		ImGui::PopStyleVar();
 	}
+
 	ImGui::EndChild();
 }
 
@@ -224,7 +263,7 @@ void RLLobby::SetImGuiContext(uintptr_t ctx)
 //  f2 -> plugins -> RLLobby
 void RLLobby::RenderSettings()
 {
-	ImGui::TextUnformatted("RLLobby plugin settings");
+	RenderRLLobby();
 }
 
 

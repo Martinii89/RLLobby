@@ -83,7 +83,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -150,6 +150,7 @@
     <ClInclude Include="MatchesContainer.h" />
     <ClInclude Include="MatchListing.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="register_command.h" />
     <ClInclude Include="RLLobby.h" />
     <ClInclude Include="API\RLLobbyApi.h" />
     <ClInclude Include="upnp\miniupnpWrapper.h" />

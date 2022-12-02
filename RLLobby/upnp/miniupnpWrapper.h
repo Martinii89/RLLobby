@@ -21,6 +21,7 @@ public:
 
 	bool Portforward(std::string duration);
 	bool RemovPortForward();
+	std::string GetExternalIp();
 
 private:
 	WSADATA wsaData;

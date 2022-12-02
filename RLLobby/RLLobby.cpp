@@ -3,50 +3,68 @@
 
 #include <utility>
 
+#include "ClientHub.h"
 #include "API/RLLobbyApi.h"
 #include "API/Contracts/Requests/CreateLobbyRequest.h"
 #include "upnp/miniupnpwrapper.h"
-
+#include "register_command.h"
 
 BAKKESMOD_PLUGIN(RLLobby, "write a plugin description here", plugin_version, PLUGINTYPE_FREEPLAY)
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 
+struct TestCommand
+{
+	int a;
+	int b;
+
+	static std::optional<TestCommand> Parse(const std::vector<std::string>& args)
+	{
+		if (args.size() < 3)
+		{
+			return {};
+		}
+
+		return TestCommand{
+			.a = get_safe_int(args[1]),
+			.b = get_safe_int(args[2])
+		};
+
+
+	}
+};
+
 void RLLobby::onLoad()
 {
 	_globalCvarManager = cvarManager;
+
 	m_upnp = std::make_shared<Miniupnpwrapper>();
-	m_lobby_api = std::make_shared<rllobby_api::RLLobbyApi>("https://rllobby.martinn.no/rllobby");
 
-	cvarManager->registerNotifier("create_lobby", [this](...)
+	api_endpoint = std::make_shared<std::string>("");
+	auto api_cvar = cvarManager->registerCvar("rllobby_endpoint", "https://rllobby.martinn.no/rllobby");
+	api_cvar.addOnValueChanged([this](auto val, auto cvar)
 	{
-		const rllobby_api::requests::CreateLobbyRequest req{"TestLobby", "TestMap", "TestDescription", 1, {"ME"}, false, "1.2.3.4", 7777};
-		m_lobby_api->CreateLobby(req,
-		                         [](const auto& res)
-		                         {
-			                         json j = res;
-			                         LOG("{}", j.dump(4));
-		                         },
-		                         [](const std::string& basic_string)
-		                         {
-			                         LOG(basic_string);
-		                         });
-	}, "", 0);
+		m_lobby_api = std::make_shared<rllobby_api::RLLobbyApi>(cvar.getStringValue());
+	});
+	api_cvar.bindTo(api_endpoint);
+	LOG("endpoint: {}", *api_endpoint);
+	m_lobby_api = std::make_shared<rllobby_api::RLLobbyApi>(*api_endpoint);
 
-	cvarManager->registerNotifier("get_lobbies", [this](...)
+	//m_hub = std::make_shared<ClientHub>("https://localhost:44397/signalr/lobby");
+	//m_hub->StartAsync();
+
+	//m_hub->ListenEvent<rllobby_api::responses::GetLobbyResponse>("LobbyCreated", [this](auto& res)
+	//{
+	//	auto lobby = FromLobbyToMatchListing(res);
+	//	m_matches.AddMatch(lobby);
+	//});
+
+	bm_commands::RegisterCommand<TestCommand>(cvarManager, "testcmd", [](const TestCommand& cmd)
 	{
-		const rllobby_api::requests::CreateLobbyRequest req{"TestLobby", "TestMap", "TestDescription", 1, {"ME"}, false, "1.2.3.4", 7777};
-		m_lobby_api->GetAllLobbyies(
-			[](const auto& res)
-			{
-				json j = res;
-				LOG("{}", j.dump(4));
-			},
-			[](const std::string& basic_string)
-			{
-				LOG(basic_string);
-			});
-	}, "", 0);
+		LOG("{}", cmd.a);
+		LOG("{}", cmd.b);
+	});
+
 }
 
 void RLLobby::onUnload()
@@ -80,7 +98,7 @@ std::string RLLobby::GetLobbyParams() const
 		auto player = server.GetLocalPrimaryPlayer();
 		if (!player.IsNull())
 		{
-			return  player.GetLoginURL().ToString();
+			return player.GetLoginURL().ToString();
 		}
 	}
 	return "";

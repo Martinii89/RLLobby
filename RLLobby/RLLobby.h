@@ -8,6 +8,7 @@
 
 #include "version.h"
 
+class ClientHub;
 class Miniupnpwrapper;
 
 namespace rllobby_api
@@ -20,8 +21,10 @@ constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_M
 
 class RLLobby : public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow, public BakkesMod::Plugin::PluginWindow
 {
+	std::shared_ptr<std::string> api_endpoint;
 	std::shared_ptr<Miniupnpwrapper> m_upnp;
 	std::shared_ptr<rllobby_api::RLLobbyApi> m_lobby_api;
+	//std::shared_ptr<ClientHub> m_hub;
 	MatchesContainer m_matches;
 	GuiData m_gui_data;
 	int m_keep_alive_interval = 15;
@@ -66,9 +69,11 @@ class RLLobby : public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plu
 	std::string menuTitle_ = "RLLobby";
 
 	void DrawHostTab();
+	void JoinLobby(const MatchListing& lobby);
 	void DrawJoinTab();
 	static void SetMatchColumnWidths();
 
+	void RenderRLLobby();
 	void Render() override;
 	std::string GetMenuName() override;
 	std::string GetMenuTitle() override;

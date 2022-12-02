@@ -31,6 +31,12 @@
     <Filter Include="upnp">
       <UniqueIdentifier>{51c41318-fbf0-436b-9fdb-0f96e8862adb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SignalR">
+      <UniqueIdentifier>{c8c8db0a-0433-480c-85b8-7c4d7ed34908}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Commands">
+      <UniqueIdentifier>{ff7d5fca-488a-4b05-939d-f87d6caa770d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -196,6 +202,9 @@
     </ClInclude>
     <ClInclude Include="API\Contracts\Requests\DeleteLobbyRequest.h">
       <Filter>Api</Filter>
+    </ClInclude>
+    <ClInclude Include="register_command.h">
+      <Filter>Commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
