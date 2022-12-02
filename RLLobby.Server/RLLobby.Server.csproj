@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Folder Include="Converters\" />
+    <Folder Include="SignalR\" />
     <Folder Include="Validation\" />
   </ItemGroup>
 

@@ -59,11 +59,15 @@ void RLLobby::onLoad()
 	//	m_matches.AddMatch(lobby);
 	//});
 
-	bm_commands::RegisterCommand<TestCommand>(cvarManager, "testcmd", [](const TestCommand& cmd)
+	cvarManager->registerNotifier("rllobby_host", [this](std::vector<std::string> args)
 	{
-		LOG("{}", cmd.a);
-		LOG("{}", cmd.b);
-	});
+		if (args.size() < 4)
+		{
+			LOG("Usage: {} name host ip", args[0]);
+		}
+		ApiAddMatch(args[1], args[2], get_safe_int(args[3]), false);
+	}, "", 0);
+
 
 }
 
