@@ -203,9 +203,6 @@
     <ClInclude Include="API\Contracts\Requests\DeleteLobbyRequest.h">
       <Filter>Api</Filter>
     </ClInclude>
-    <ClInclude Include="register_command.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RLLobby.rc">

@@ -1,38 +1,14 @@
 #include "pch.h"
 #include "RLLobby.h"
 
-#include <utility>
-
-#include "ClientHub.h"
+#include "utils/parser.h"
 #include "API/RLLobbyApi.h"
 #include "API/Contracts/Requests/CreateLobbyRequest.h"
 #include "upnp/miniupnpwrapper.h"
-#include "register_command.h"
 
 BAKKESMOD_PLUGIN(RLLobby, "write a plugin description here", plugin_version, PLUGINTYPE_FREEPLAY)
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
-
-struct TestCommand
-{
-	int a;
-	int b;
-
-	static std::optional<TestCommand> Parse(const std::vector<std::string>& args)
-	{
-		if (args.size() < 3)
-		{
-			return {};
-		}
-
-		return TestCommand{
-			.a = get_safe_int(args[1]),
-			.b = get_safe_int(args[2])
-		};
-
-
-	}
-};
 
 void RLLobby::onLoad()
 {
@@ -49,15 +25,6 @@ void RLLobby::onLoad()
 	api_cvar.bindTo(api_endpoint);
 	LOG("endpoint: {}", *api_endpoint);
 	m_lobby_api = std::make_shared<rllobby_api::RLLobbyApi>(*api_endpoint);
-
-	//m_hub = std::make_shared<ClientHub>("https://localhost:44397/signalr/lobby");
-	//m_hub->StartAsync();
-
-	//m_hub->ListenEvent<rllobby_api::responses::GetLobbyResponse>("LobbyCreated", [this](auto& res)
-	//{
-	//	auto lobby = FromLobbyToMatchListing(res);
-	//	m_matches.AddMatch(lobby);
-	//});
 
 	cvarManager->registerNotifier("rllobby_host", [this](std::vector<std::string> args)
 	{

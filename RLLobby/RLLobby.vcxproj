@@ -54,6 +54,12 @@
     <IntDir>$(SolutionDir)build\.intermediates\$(Configuration)\</IntDir>
     <TargetName>RLLobby</TargetName>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -150,7 +156,6 @@
     <ClInclude Include="MatchesContainer.h" />
     <ClInclude Include="MatchListing.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="register_command.h" />
     <ClInclude Include="RLLobby.h" />
     <ClInclude Include="API\RLLobbyApi.h" />
     <ClInclude Include="upnp\miniupnpWrapper.h" />
