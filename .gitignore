@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /plugins
+/RLLobby/vcpkg_installed/x64-windows-static
