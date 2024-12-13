@@ -1,10 +1,8 @@
-using System.Runtime.Serialization;
 using Microsoft.AspNetCore.HttpOverrides;
 using FastEndpoints.Swagger;
 using RLLobby.Server.Converters;
 using RLLobby.Server.Data;
 using RLLobby.Server.Mappers;
-using RLLobby.Server.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 

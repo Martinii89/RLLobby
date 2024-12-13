@@ -4,8 +4,8 @@ public class RemoveOldLobbiesService : BackgroundService
 {
     private readonly ILogger<RemoveOldLobbiesService> m_logger;
     private readonly ILobbyRepository m_lobbyRepository;
-    private const int CheckIntervalSeconds = 60;
-    private const int OldThresholdMinutes = 10;
+    private const int CheckIntervalSeconds = 30;
+    private const int OldThresholdMinutes = 2;
 
     public RemoveOldLobbiesService(ILobbyRepository mLobbyRepository, ILogger<RemoveOldLobbiesService> mLogger)
     {
@@ -22,7 +22,7 @@ public class RemoveOldLobbiesService : BackgroundService
             var oldLobbies = allLobies.Where(x => x.Updated.AddMinutes(OldThresholdMinutes) < DateTimeOffset.UtcNow);
             foreach (var oldLobby in oldLobbies)
             {
-                m_logger.LogDebug("Removing lobby {} for inactivity", oldLobby.Name);
+                m_logger.LogDebug("Removing lobby {LobbyName} for inactivity", oldLobby.Name);
                 await m_lobbyRepository.DeleteLobbyAsync(oldLobby.Id, oldLobby.Token);
             }
 

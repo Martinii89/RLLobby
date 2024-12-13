@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /plugins
 vcpkg_installed/
+.idea
