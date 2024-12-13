@@ -1,20 +1,20 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+USER $APP_UID
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+EXPOSE 8080
+EXPOSE 8081
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+ARG TARGETARCH
 WORKDIR /src
 COPY ["RLLobby.Server/RLLobby.Server.csproj", "RLLobby.Server/"]
-RUN dotnet restore "RLLobby.Server/RLLobby.Server.csproj"
+RUN dotnet restore "RLLobby.Server/RLLobby.Server.csproj" -a $TARGETARCH
 COPY . .
 WORKDIR "/src/RLLobby.Server"
-RUN dotnet build "RLLobby.Server.csproj" -c Release -o /app/build
+RUN dotnet build "RLLobby.Server.csproj" -a $TARGETARCH -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "RLLobby.Server.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "RLLobby.Server.csproj" -a $TARGETARCH -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

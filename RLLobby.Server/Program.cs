@@ -9,11 +9,18 @@ var builder = WebApplication.CreateBuilder(args);
 //builder.Services.AddCors();
 //builder.Services.AddSignalR();
 builder.Services.AddFastEndpoints();
-builder.Services.AddSwaggerDoc(o =>
+builder.Services.SwaggerDocument(o =>
 {
-    o.Title = "RLLobby api";
-    o.Version = "v1";
-}, shortSchemaNames: true, addJWTBearerAuth: false, removeEmptySchemas:true);
+    o.DocumentSettings = s =>
+    {
+        s.Title = "RLLobby api";
+        s.Version = "v1";
+    };
+    o.ShortSchemaNames = true;
+    o.EnableJWTBearerAuth = false;
+    o.RemoveEmptyRequestSchema = true;
+});
+
 
 builder.Services.AddSingleton<ILobbyRepository, InMemoryLobbyRepository>();
 builder.Services.AddSingleton<ILobbyMapper, LobbyMapper>();
@@ -40,7 +47,7 @@ app.UseFastEndpoints(c =>
 
 
 app.UseOpenApi();
-app.UseSwaggerUi3(s => s.ConfigureDefaults());
+app.UseSwaggerGen();
 
 
 app.Run();

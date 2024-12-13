@@ -7,9 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RLLobby.Plugin", "RLLobby\R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RLLobby.Server", "RLLobby.Server\RLLobby.Server.csproj", "{E32C2CA8-CA69-45CB-AA06-4F1BAAC70FE7}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{B97AE9BA-2D36-4368-8BA3-44635986C786}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{29BD07FC-CCCC-416F-8A43-3899B6CEE852}"
+	ProjectSection(SolutionItems) = preProject
+		server_multiplatform_build.bat = server_multiplatform_build.bat
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugin", "Plugin", "{53A8C923-FD08-4AE1-B07C-451B515CC30D}"
 EndProject
@@ -37,14 +38,6 @@ Global
 		{E32C2CA8-CA69-45CB-AA06-4F1BAAC70FE7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E32C2CA8-CA69-45CB-AA06-4F1BAAC70FE7}.Release|x64.ActiveCfg = Release|Any CPU
 		{E32C2CA8-CA69-45CB-AA06-4F1BAAC70FE7}.Release|x64.Build.0 = Release|Any CPU
-		{B97AE9BA-2D36-4368-8BA3-44635986C786}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B97AE9BA-2D36-4368-8BA3-44635986C786}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B97AE9BA-2D36-4368-8BA3-44635986C786}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{B97AE9BA-2D36-4368-8BA3-44635986C786}.Debug|x64.Build.0 = Debug|Any CPU
-		{B97AE9BA-2D36-4368-8BA3-44635986C786}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B97AE9BA-2D36-4368-8BA3-44635986C786}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B97AE9BA-2D36-4368-8BA3-44635986C786}.Release|x64.ActiveCfg = Release|Any CPU
-		{B97AE9BA-2D36-4368-8BA3-44635986C786}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,7 +45,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BA12DDA6-4D8E-4FE7-9F7C-D89923CB5D0A} = {53A8C923-FD08-4AE1-B07C-451B515CC30D}
 		{E32C2CA8-CA69-45CB-AA06-4F1BAAC70FE7} = {29BD07FC-CCCC-416F-8A43-3899B6CEE852}
-		{B97AE9BA-2D36-4368-8BA3-44635986C786} = {29BD07FC-CCCC-416F-8A43-3899B6CEE852}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A827FCD5-BAA0-4FCE-BF43-DD47B5AC4639}
