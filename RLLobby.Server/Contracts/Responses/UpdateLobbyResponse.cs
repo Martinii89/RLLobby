@@ -1,5 +1,6 @@
 ﻿namespace RLLobby.Server.Contracts.Responses;
 
+[PublicAPI]
 public class UpdateLobbyResponse
 {
     public Guid Id { get; set; }

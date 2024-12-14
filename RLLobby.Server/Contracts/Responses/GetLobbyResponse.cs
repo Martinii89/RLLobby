@@ -1,7 +1,6 @@
-﻿using RLLobby.Server.Domain;
+﻿namespace RLLobby.Server.Contracts.Responses;
 
-namespace RLLobby.Server.Contracts.Responses;
-
+[PublicAPI]
 public class GetLobbyResponse
 {
     public Guid Id { get; set; } = Guid.NewGuid();

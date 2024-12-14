@@ -6,18 +6,11 @@ namespace RLLobby.Server.Endpoints;
 
 [HttpDelete("lobby/{id}")]
 [AllowAnonymous]
-public class DeleteLobbyEndpoint : Endpoint<DeleteLobbyRequest>
+public class DeleteLobbyEndpoint(ILobbyRepository lobbyRepository) : Endpoint<DeleteLobbyRequest>
 {
-    private readonly ILobbyRepository m_lobbyRepository;
-
-    public DeleteLobbyEndpoint(ILobbyRepository lobbyRepository)
-    {
-        m_lobbyRepository = lobbyRepository;
-    }
-
     public override async Task HandleAsync(DeleteLobbyRequest req, CancellationToken ct)
     {
-        var deleted = await m_lobbyRepository.DeleteLobbyAsync(req.Id, req.Token);
+        var deleted = await lobbyRepository.DeleteLobbyAsync(req.Id, req.Token);
         if (deleted)
         {
             await SendNoContentAsync(ct);

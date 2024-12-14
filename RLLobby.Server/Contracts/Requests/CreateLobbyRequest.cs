@@ -1,5 +1,6 @@
 ﻿namespace RLLobby.Server.Contracts.Requests;
 
+[PublicAPI]
 public class CreateLobbyRequest
 {
     public string Name { get; set; } = default!;

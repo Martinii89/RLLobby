@@ -1,8 +1,7 @@
-﻿using RLLobby.Server.Contracts.Requests;
+﻿namespace RLLobby.Server.Contracts.Responses;
 
-namespace RLLobby.Server.Contracts.Responses;
-
+[PublicAPI]
 public class GetAllLobbiesResponse
 {
-    public List<GetLobbyResponse> Lobbies { get; set; } = new();
+    public List<GetLobbyResponse> Lobbies { get; set; } = [];
 }
